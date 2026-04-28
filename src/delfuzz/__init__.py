@@ -1,6 +1,6 @@
 from .char import char_distance, char_ratio
-from .token import token_distance, token_ratio, get_sim
-from .costs import CHAR_COSTS, TOKEN_COSTS, MULTIGRAPH_PLACEHOLDERS
+from .token import token_distance, token_ratio
+from .costs import CHAR_COSTS, TOKEN_COSTS, MULTIGRAPH_PLACEHOLDERS, add_inverse_subs
 
 __all__ = [
     # Scoring functions
@@ -12,7 +12,7 @@ __all__ = [
     "token_distance",
 
     # Utilities
-    "get_sim",
+    "add_inverse_subs",
 
     # Defaults
     "CHAR_COSTS",

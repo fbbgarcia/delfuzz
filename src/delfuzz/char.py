@@ -1,5 +1,4 @@
 import math
-
 from .costs import CHAR_COSTS, MULTIGRAPH_PLACEHOLDERS
 
 
@@ -7,7 +6,7 @@ def _get_char_sub_cost(
     char1: tuple,
     char2: tuple,
     cost_dict: dict = CHAR_COSTS,
-) -> float:
+):
     """
     Returns the substitution cost for two character units.
     Defaults to 1.0 if no custom cost is defined.
@@ -24,7 +23,7 @@ def _get_char_sub_cost(
 def _get_char_ins_cost(
     char: tuple,
     cost_dict: dict = CHAR_COSTS,
-) -> float:
+):
     """
     Returns the insertion cost for a character unit.
     Defaults to 1.0 per character if no custom cost is defined.
@@ -37,7 +36,7 @@ def _get_char_ins_cost(
 def _get_char_del_cost(
     char: tuple,
     cost_dict: dict = CHAR_COSTS,
-) -> float:
+):
     """
     Returns the deletion cost for a character unit.
     Defaults to 1.0 per character if no custom cost is defined.
@@ -53,7 +52,7 @@ def char_distance(
     cost_dict: dict = CHAR_COSTS,
     placeholders: list[tuple[str, str]] = MULTIGRAPH_PLACEHOLDERS,
     max_span_len: int = 2,
-) -> tuple[float, int, int]:
+):
     """
     Computes a modified character-level Levenshtein distance between two tokens with 
     custom costs.
@@ -157,7 +156,7 @@ def char_ratio(
     cost_dict: dict = CHAR_COSTS,
     placeholders: list[tuple[str, str]] = MULTIGRAPH_PLACEHOLDERS,
     max_span_len: int = 2,
-) -> float:
+):
     """
     Computes a similarity score between two tokens based on a 
     modified character-level Levenshtein distance with custom costs.

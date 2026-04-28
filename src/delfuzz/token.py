@@ -1,16 +1,15 @@
 import math
-
 from .costs import CHAR_COSTS, TOKEN_COSTS, MULTIGRAPH_PLACEHOLDERS
 from .char import char_ratio
 
 
-def get_sim(
+def _get_avg_sim(
     token1: tuple,
     token2: tuple,
     char_cost_dict: dict = CHAR_COSTS,
     placeholders: list[tuple[str, str]] = MULTIGRAPH_PLACEHOLDERS,
     max_span_len: int = 2,
-) -> float:
+):
     """
     Computes the average char_ratio across paired elements of two same-length tuples.
     Used to find the closest matching key in a cost dictionary.
@@ -43,7 +42,7 @@ def _get_token_sub_cost(
     placeholders: list[tuple[str, str]] = MULTIGRAPH_PLACEHOLDERS,
     sim_threshold: float = 70.0,
     max_span_len: int = 2,
-) -> float:
+):
     """
     Returns the substitution cost for two token units.
 
@@ -71,7 +70,7 @@ def _get_token_sub_cost(
 
     best_key, best_key_sim = max(
         (
-            (candidate, get_sim(token1, candidate, char_cost_dict, placeholders, max_span_len))
+            (candidate, get_avg_sim(token1, candidate, char_cost_dict, placeholders, max_span_len))
             for candidate in token_cost_dict["sub"]
             if len(candidate) == len(token1)
         ),
@@ -88,13 +87,13 @@ def _get_token_sub_cost(
     best_val_key, base_cost = max(
         candidates,
         key=lambda x: (
-            get_sim(token2, x[0], char_cost_dict, placeholders, max_span_len)
+            get_avg_sim(token2, x[0], char_cost_dict, placeholders, max_span_len)
             if len(token2) == len(x[0]) else 0.0
         ),
     )
 
     best_val_sim = (
-        get_sim(token2, best_val_key, char_cost_dict, placeholders, max_span_len)
+        get_avg_sim(token2, best_val_key, char_cost_dict, placeholders, max_span_len)
         if len(token2) == len(best_val_key) else 0.0
     )
 
@@ -112,7 +111,7 @@ def _get_token_ins_cost(
     placeholders: list[tuple[str, str]] = MULTIGRAPH_PLACEHOLDERS,
     sim_threshold: float = 70.0,
     max_span_len: int = 2,
-) -> float:
+):
     """
     Returns the insertion cost for a token unit.
 
@@ -129,7 +128,7 @@ def _get_token_ins_cost(
     """
     best_key, best_key_sim = max(
         (
-            (candidate, get_sim(token, candidate, char_cost_dict, placeholders, max_span_len))
+            (candidate, get_avg_sim(token, candidate, char_cost_dict, placeholders, max_span_len))
             for candidate in token_cost_dict["ins"]
             if len(candidate) == len(token)
         ),
@@ -150,7 +149,7 @@ def _get_token_del_cost(
     placeholders: list[tuple[str, str]] = MULTIGRAPH_PLACEHOLDERS,
     sim_threshold: float = 70.0,
     max_span_len: int = 2,
-) -> float:
+):
     """
     Returns the deletion cost for a token unit.
 
@@ -167,7 +166,7 @@ def _get_token_del_cost(
     """
     best_key, best_key_sim = max(
         (
-            (candidate, get_sim(token, candidate, char_cost_dict, placeholders, max_span_len))
+            (candidate, get_avg_sim(token, candidate, char_cost_dict, placeholders, max_span_len))
             for candidate in token_cost_dict["del"]
             if len(candidate) == len(token)
         ),
@@ -190,7 +189,7 @@ def token_distance(
     sim_threshold: float = 70.0,
     max_char_span_len: int = 2,
     max_token_span_len: int = 3,
-) -> tuple[float, int, int]:
+):
     """
     Computes a modified token-level Levenshtein distance between two names with
     custom costs.
@@ -323,7 +322,7 @@ def token_ratio(
     sim_threshold: float = 70.0,
     max_char_span_len: int = 2,
     max_token_span_len: int = 3,
-) -> float:
+):
     """
     Computes a similarity score between two names based on a modified token-level
     Levenshtein distance with custom costs.

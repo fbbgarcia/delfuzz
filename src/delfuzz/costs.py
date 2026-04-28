@@ -314,7 +314,7 @@ MULTIGRAPH_PLACEHOLDERS: list[tuple[str, str]] = [
 ]
 
 
-def _add_inverse_subs(costs: dict) -> dict:
+def add_inverse_subs(costs: dict):
     """
     Returns a copy of a one-way cost dictionary with inverted substitution pairs added.
     """
@@ -329,5 +329,5 @@ def _add_inverse_subs(costs: dict) -> dict:
 
 
 # Expanded cost dictionaries with inverse substitutions included.
-CHAR_COSTS: dict = _add_inverse_subs(_CHAR_COSTS_ONE_WAY)
-TOKEN_COSTS: dict = _add_inverse_subs(_TOKEN_COSTS_ONE_WAY)
+CHAR_COSTS: dict = add_inverse_subs(_CHAR_COSTS_ONE_WAY)
+TOKEN_COSTS: dict = add_inverse_subs(_TOKEN_COSTS_ONE_WAY)
