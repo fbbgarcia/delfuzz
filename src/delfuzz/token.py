@@ -1,6 +1,7 @@
 import math
-from .costs import CHAR_COSTS, TOKEN_COSTS, MULTIGRAPH_PLACEHOLDERS
-from .char import char_ratio
+import warnings
+from .defaults import CHAR_COSTS, TOKEN_COSTS, MULTIGRAPH_PLACEHOLDERS
+from .char import _char_ratio
 
 
 def _get_avg_sim(
@@ -28,7 +29,7 @@ def _get_avg_sim(
     if len(token1) != len(token2):
         return 0.0
     scores = [
-        100.0 if t == c else char_ratio(t, c, char_cost_dict, placeholders, max_span_len)
+        100.0 if t == c else _char_ratio(t, c, char_cost_dict, placeholders, max_span_len)
         for t, c in zip(token1, token2)
     ]
     return sum(scores) / len(scores)
@@ -63,14 +64,14 @@ def _get_token_sub_cost(
         float: Substitution cost for the two token units.
     """
     if len(token1) == 1 and len(token2) == 1:
-        sim = char_ratio(token1[0], token2[0], char_cost_dict, placeholders, max_span_len)
+        sim = _char_ratio(token1[0], token2[0], char_cost_dict, placeholders, max_span_len)
         default_cost = 1 - sim / 100
     else:
         default_cost = math.inf
 
     best_key, best_key_sim = max(
         (
-            (candidate, get_avg_sim(token1, candidate, char_cost_dict, placeholders, max_span_len))
+            (candidate, _get_avg_sim(token1, candidate, char_cost_dict, placeholders, max_span_len))
             for candidate in token_cost_dict["sub"]
             if len(candidate) == len(token1)
         ),
@@ -87,13 +88,13 @@ def _get_token_sub_cost(
     best_val_key, base_cost = max(
         candidates,
         key=lambda x: (
-            get_avg_sim(token2, x[0], char_cost_dict, placeholders, max_span_len)
+            _get_avg_sim(token2, x[0], char_cost_dict, placeholders, max_span_len)
             if len(token2) == len(x[0]) else 0.0
         ),
     )
 
     best_val_sim = (
-        get_avg_sim(token2, best_val_key, char_cost_dict, placeholders, max_span_len)
+        _get_avg_sim(token2, best_val_key, char_cost_dict, placeholders, max_span_len)
         if len(token2) == len(best_val_key) else 0.0
     )
 
@@ -128,7 +129,7 @@ def _get_token_ins_cost(
     """
     best_key, best_key_sim = max(
         (
-            (candidate, get_avg_sim(token, candidate, char_cost_dict, placeholders, max_span_len))
+            (candidate, _get_avg_sim(token, candidate, char_cost_dict, placeholders, max_span_len))
             for candidate in token_cost_dict["ins"]
             if len(candidate) == len(token)
         ),
@@ -166,7 +167,7 @@ def _get_token_del_cost(
     """
     best_key, best_key_sim = max(
         (
-            (candidate, get_avg_sim(token, candidate, char_cost_dict, placeholders, max_span_len))
+            (candidate, _get_avg_sim(token, candidate, char_cost_dict, placeholders, max_span_len))
             for candidate in token_cost_dict["del"]
             if len(candidate) == len(token)
         ),
@@ -180,7 +181,7 @@ def _get_token_del_cost(
     return min(base_cost + fuzziness, 1.0)
 
 
-def token_distance(
+def _token_distance(
     name1: str,
     name2: str,
     char_cost_dict: dict = CHAR_COSTS,
@@ -313,7 +314,7 @@ def token_distance(
     return dist, u1, u2
 
 
-def token_ratio(
+def score(
     name1: str,
     name2: str,
     char_cost_dict: dict = CHAR_COSTS,
@@ -334,14 +335,28 @@ def token_ratio(
         token_cost_dict (dict): Dictionary of custom token-level costs.
         placeholders (list[tuple[str, str]]): Multigraph-to-placeholder mappings.
         sim_threshold (float): Minimum similarity (0-100) to soft match a token unit to a key.
-            dictionary key. Inputs below this threshold fall back to the default cost.
+            Inputs below this threshold fall back to the default cost.
         max_char_span_len (int): Maximum length of character spans to consider.
         max_token_span_len (int): Maximum length of token spans to consider.
 
     Returns:
         float: Similarity score between the two names (0.0-100.0).
     """
-    distance, u1, u2 = token_distance(
+
+    if not name1.strip() and not name2.strip():
+        warnings.warn(
+            "Both name inputs are empty strings. Returning 100.0.",
+            UserWarning,
+        )
+        return 100.0
+    if not name1.strip() or not name2.strip():
+        warnings.warn(
+            "One name input is an empty string. Returning 0.0.",
+            UserWarning,
+        )
+        return 0.0
+
+    distance, u1, u2 = _token_distance(
         name1, name2, char_cost_dict, token_cost_dict,
         placeholders, sim_threshold, max_char_span_len, max_token_span_len,
     )

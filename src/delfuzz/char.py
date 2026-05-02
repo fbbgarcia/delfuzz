@@ -1,5 +1,5 @@
 import math
-from .costs import CHAR_COSTS, MULTIGRAPH_PLACEHOLDERS
+from .defaults import CHAR_COSTS, MULTIGRAPH_PLACEHOLDERS
 
 
 def _get_char_sub_cost(
@@ -46,7 +46,7 @@ def _get_char_del_cost(
     return sum(_get_char_del_cost((c,), cost_dict) for c in char)
 
 
-def char_distance(
+def _char_distance(
     token1: str,
     token2: str,
     cost_dict: dict = CHAR_COSTS,
@@ -65,7 +65,7 @@ def char_distance(
         token2 (str): Second token.
         cost_dict (dict): Dictionary of custom costs.
         placeholders (list[tuple[str, str]]): Multigraph-to-placeholder mappings.
-        max_span_len (int): Maximum length ofcharacter spans to consider.
+        max_span_len (int): Maximum length of character spans to consider.
 
     Returns:
         tuple[float, int, int]: A (distance, units1, units2) tuple where distance is
@@ -150,7 +150,7 @@ def char_distance(
     return rows[1][len2]
 
 
-def char_ratio(
+def _char_ratio(
     token1: str,
     token2: str,
     cost_dict: dict = CHAR_COSTS,
@@ -171,7 +171,7 @@ def char_ratio(
     Returns:
         float: Similarity score between the two tokens (0.0-100.0).
     """
-    distance, u1, u2 = char_distance(token1, 
+    distance, u1, u2 = _char_distance(token1, 
                                      token2, 
                                      cost_dict, 
                                      placeholders, 

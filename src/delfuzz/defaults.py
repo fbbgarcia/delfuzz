@@ -2,8 +2,8 @@
 # First key is the operation type: "sub" for substitution, "ins" for insertion, and "del" for deletion.
 # Second key is a tuple of characters representing the unit being operated on.
 # Substitution values are lists of (second_unit, cost) pairs, 
-# where second_unit is a tuple of characters representing the other unit involved in the substitution.
-#   Substitution costs are stored one-way for brevity, but the _add_inverse_subs function adds the corresponding inverse mappings automatically.
+#   where second_unit is a tuple of characters representing the other unit involved in the substitution.
+#   Substitution costs are stored one-way for brevity, but the add_inverse_subs function adds the corresponding inverse mappings automatically.
 # Insertion and deletion values are single costs.
 _CHAR_COSTS_ONE_WAY = {
     "sub": {
@@ -22,17 +22,17 @@ _CHAR_COSTS_ONE_WAY = {
         ("g",):    [(("j",), 0.50)],
         ("p", "h"): [(("f",), 0.50)],
     },
-    # silent 'h' is insertion and deletion
+    # silent 'h' insertion and deletion
     "ins": {("h",): 0.50},
     "del": {("h",): 0.50},
 }
 
-# Custom costs for token-level operations relfecting Spanish name usage conventions.
+# Custom costs for token-level operations reflecting Spanish name usage conventions.
 # First key is the operation type: "sub" for substitution, "ins" for insertion, and "del" for deletion.
 # Second key is a tuple of tokens representing the unit being operated on.
 # Substitution values are lists of (second_unit, cost) pairs,
-# where second_unit is a tuple of tokens representing the other unit involved in the substitution.
-#   Substitution costs are stored one-way for brevity, but the _add_inverse_subs function adds the corresponding inverse mappings automatically.
+#   where second_unit is a tuple of tokens representing the other unit involved in the substitution.
+#   Substitution costs are stored one-way for brevity, but the add_inverse_subs function adds the corresponding inverse mappings automatically.
 # Insertion and deletion values are single costs.
 _TOKEN_COSTS_ONE_WAY = {
     "sub": {
