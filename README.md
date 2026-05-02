@@ -41,16 +41,16 @@ import delfuzz
 | --- | --- | --- | --- |
 | name1 | str |  | First name to be compared. |
 | name2 | str |  | Second name to be compared. |
-| char_cost_dict | dict | [CHAR_COSTS](src/delfuzz/defaults.py) | Dictionary of custom character-level costs. |
-| token_cost_dict | dict | [TOKEN_COSTS](src/delfuzz/defaults.py) | Dictionary of custom token-level costs. |
-| placeholders | list[tuple[str, str]] | [MULTIGRAPH_PLACEHOLDERS](src/delfuzz/defaults.py) | List of multigraph-to-placeholder mappings used to treat common Spanish multigraphs as their own singular characters. |
+| char_cost_dict | dict | [CHAR_COSTS]([CHAR_COSTS](https://github.com/fbbgarcia/delfuzz/blob/main/src/delfuzz/defaults.py)) | Dictionary of custom character-level costs. |
+| token_cost_dict | dict | [TOKEN_COSTS]([CHAR_COSTS](https://github.com/fbbgarcia/delfuzz/blob/main/src/delfuzz/defaults.py)) | Dictionary of custom token-level costs. |
+| placeholders | list[tuple[str, str]] | [MULTIGRAPH_PLACEHOLDERS]([CHAR_COSTS](https://github.com/fbbgarcia/delfuzz/blob/main/src/delfuzz/defaults.py)) | List of multigraph-to-placeholder mappings used to treat common Spanish multigraphs as their own singular characters. |
 | sim_threshold | float | 70.0 | Minimum similarity (0-100) required to soft match a token/token span to a key in token_cost_dict. Allows algorithm to tolerate minor spelling variations and errors. |
 | max_char_span_len | int | 2 | Maximum length of character spans to consider. Allows algorithm to support operations on sequences of characters (e.g. multigraphs). |
 | max_token_span_len | int | 3 | Maximum length of token spans to consider. Allows algorithm to support operations on sequences of tokens. |
 
 ### Custom Cost Dictionaries
 
-`score` accepts custom cost dictionaries, allowing you to modify or replace the defaults ([CHAR_COSTS](src/delfuzz/defaults.py) and/or [TOKEN_COSTS](src/delfuzz/defaults.py)).
+`score` accepts custom cost dictionaries, allowing you to modify or replace the defaults ([CHAR_COSTS]([CHAR_COSTS](https://github.com/fbbgarcia/delfuzz/blob/main/src/delfuzz/defaults.py)) and/or [TOKEN_COSTS]([CHAR_COSTS](https://github.com/fbbgarcia/delfuzz/blob/main/src/delfuzz/defaults.py))).
 
 Cost dictionaries have the following structure:
 
